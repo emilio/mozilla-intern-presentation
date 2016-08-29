@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Emilio Cobos Álvarez [:emilio]">
+  <title>Stylo</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <!-- <link rel="stylesheet" href="reveal.js/css/theme/solarized.css" id="theme"> -->
+  <link rel="stylesheet" href="custom.css">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">Stylo</h1>
+  <h1 class="subtitle">Servo's style system in Gecko</h1>
+  <h2 class="author">Emilio Cobos Álvarez [:emilio]</h2>
+</section>
+
+<section id="aboutemilio" class="slide level1">
+<h1><code>about:emilio</code></h1>
+<ul>
+<li>Platform intern.</li>
+<li>Undergrad student from Salamanca (Spain).</li>
+<li>Servo contributor from more than a year.
+<ul>
+<li>WebGL, style, layout...</li>
+<li>I review stuff, sometimes.</li>
+<li>Also maintain and improve Servo's fork of rust-bindgen.</li>
+</ul></li>
+</ul>
+</section>
+<section id="stylo" class="slide level1">
+<h1>Stylo</h1>
+<p>Integrating Servo's style system, written in Rust, inside Gecko.</p>
+<figure>
+<img src="img/stylo.png" alt="Stylo screenshot as of 28th of August of 2016" /><figcaption>Stylo screenshot as of 28th of August of 2016</figcaption>
+</figure>
+</section>
+<section id="motivations" class="slide callout level1">
+<h1>Motivations</h1>
+</section>
+<section id="rust" class="slide level1">
+<h1>Rust</h1>
+<figure>
+<img src="img/rust.png" alt="Rust&#39;s logo" /><figcaption>Rust's logo</figcaption>
+</figure>
+<ul>
+<li>New systems programming language, born at Mozilla.</li>
+<li>More safety guarantees than C++, without compromising performance.</li>
+<li>No data races.</li>
+</ul>
+</section>
+<section id="servo" class="slide level1">
+<h1>Servo</h1>
+<figure>
+<img src="img/servo.png" alt="Servo logo" /><figcaption>Servo logo</figcaption>
+</figure>
+<ul>
+<li>Next generation web-browser engine, designed for modern hardware.</li>
+<li>Not totally web compatible right now, but some components are stable enough.</li>
+</ul>
+</section>
+<section id="challenges" class="slide callout level1">
+<h1>Challenges</h1>
+</section>
+<section id="language-boundaries-section" class="slide level1">
+<h1 id="language-boundaries">Language boundaries</h1>
+<ul>
+<li>Crossing language boundaries in performance-critical code is not an easy
+  problem (FFI calls aren't free).</li>
+<li>We generate equivalent-layout struct types to avoid crossing FFI boundaries
+  for everything.</li>
+</ul>
+</section>
+<section class="slide level1">
+<h1 id="an-example">An example</h1>
+<div class="sourceCode"><pre class="sourceCode rust"><code class="sourceCode rust"><span class="at">#[</span>repr<span class="at">(</span>C<span class="at">)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> nsStyleImageLayers {
+    <span class="kw">pub</span> mAttachmentCount: <span class="dt">u32</span>,
+    <span class="kw">pub</span> mClipCount: <span class="dt">u32</span>,
+    <span class="kw">pub</span> mOriginCount: <span class="dt">u32</span>,
+    <span class="kw">pub</span> mRepeatCount: <span class="dt">u32</span>,
+    <span class="kw">pub</span> mPositionXCount: <span class="dt">u32</span>,
+    <span class="kw">pub</span> mPositionYCount: <span class="dt">u32</span>,
+    <span class="kw">pub</span> mImageCount: <span class="dt">u32</span>,
+    <span class="kw">pub</span> mSizeCount: <span class="dt">u32</span>,
+    <span class="kw">pub</span> mMaskModeCount: <span class="dt">u32</span>,
+    <span class="kw">pub</span> mBlendModeCount: <span class="dt">u32</span>,
+    <span class="kw">pub</span> mCompositeCount: <span class="dt">u32</span>,
+    <span class="kw">pub</span> mLayers: nsStyleAutoArray&lt;nsStyleImageLayers_Layer&gt;,
+}</code></pre></div>
+</section>
+<section id="different-styling-models" class="slide level1">
+<h1>Different styling models</h1>
+<ul>
+<li>Servo uses the content tree (DOM), each node owns its computed values, and
+  its pseudo elements', that may be shared via refcounting.</li>
+<li>Gecko has multiple trees (Content, Frame, Rule, Style context). Each
+  content can have zero or N frames, frame owns the style context, that owns
+  computed values.</li>
+</ul>
+</section>
+<section id="geckos-layout-model" class="slide level1">
+<h1>Gecko's layout model</h1>
+<figure>
+<img src="img/gecko-style-overview.gif" alt="Slide by Chris Waterson" /><figcaption>Slide by Chris Waterson</figcaption>
+</figure>
+</section>
+<section id="current-approach" class="slide level1">
+<h1>Current approach</h1>
+<ul>
+<li>Right now we do a pass after the parallel traversal attaching the style
+  contexts to the appropriate frames.</li>
+<li>Nice for simplicity while developing, but we might want to refactor it
+  (there are plans here).</li>
+</ul>
+</section>
+<section id="other-stuff-i-did" class="slide level1">
+<h1>Other stuff I did</h1>
+<p>Worked on a total of 30 Bugzilla bugs, submitted 40 PRs for
+<code>servo/servo</code>, and reviewed 65 of them.</p>
+<p>Helped a few people to make their first contribution to Gecko or Servo,
+which feels awesome!</p>
+</section>
+<section id="people-i-need-to-thank-for-making-my-summer-awesome." class="slide level1">
+<h1>People I need to thank for making my summer awesome.</h1>
+<ul id="thanks-to"></ul>
+<script>
+  function shuffle(arr) {
+    var len = arr.length;
+    while (len--) {
+      var r = Math.floor(Math.random() * (len + 1));
+      var tmp = arr[len];
+      arr[len] = arr[r];
+      arr[r] = tmp;
+    }
+
+    return arr;
+  }
+
+  var thanks_to = [
+    "Bobby, Cameron, and all the Stylo team (they're great!).",
+    "Johnny Stenback and Andrew Overholt.",
+    "Daniel Holbert, Andrew McCreight, Bill McCloskey.",
+    "All the MV interns (esp. Leo, Michael, Rob, Ryan).",
+    "The University team.",
+    "The Servo team.",
+    "Boris Zbarsky and David Baron, for all their insight in different parts of" +
+      "the platform."
+  ];
+
+  shuffle(thanks_to);
+
+  document.getElementById("thanks-to").innerHTML = "<li>" +
+    thanks_to.join("</li><li>") +
+    "</li>";
+</script>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>

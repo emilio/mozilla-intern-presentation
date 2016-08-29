@@ -1,0 +1,103 @@
+html, body {
+  font-size: 2em;
+  font-family: Fira Sans;
+  color: #333;
+}
+
+.reveal .title {
+  font-size: 1.5em;
+}
+
+.reveal .subtitle {
+  font-size: 1em;
+  color: #555;
+}
+
+.reveal .author {
+  margin-top: 3em;
+  font-size: .8em;
+}
+
+.reveal .slide {
+  text-align: left;
+  font-size: .5em;
+  top: auto!important;
+}
+
+/* Sorry, override hard-coded styles in reveal.css */
+.reveal.center .slides section.callout {
+  top: 50%!important;
+  transform: translateY(-50%);
+}
+
+.reveal .slide > h1 {
+  margin-bottom: 1em;
+  border-bottom: 1px solid;
+  font-size: 1.5em;
+}
+
+.reveal .slide ul {
+  padding-left: 1em;
+}
+
+.reveal .slide li {
+  margin: .5em 0;
+}
+
+#stylo figure {
+  max-height: 60vh;
+  overflow: hidden;
+  position: relative;
+  margin: .5em;
+}
+
+#stylo figcaption {
+  position: absolute;
+  background: rgba(0, 0, 0, .8);
+  padding: .5em 0;
+  width: 100%;
+  display: block;
+  bottom: 0;
+  color: white;
+  text-align: center;
+}
+
+#stylo img {
+  max-width: 100%;
+}
+
+.reveal .slide h1:only-child {
+  font-size: 3em;
+  text-align: center;
+  margin: 0;
+  border: 0;
+}
+
+#rust figcaption,
+#servo figcaption {
+  display: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+#rust figure,
+#servo figure {
+  text-align: center;
+  margin: 1em;
+}
+
+#rust img,
+#servo img {
+  max-height: 30vh;
+}
+
+.sourceCode {
+  font-size: .8em;
+}
+
+.navigate-up,
+.navigate-down {
+  display: none;
+}
