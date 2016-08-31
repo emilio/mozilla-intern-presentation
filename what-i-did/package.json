@@ -1,0 +1,12 @@
+{
+  "name": "what-i-did",
+  "version": "1.0.0",
+  "description": "What I did this summer",
+  "main": "index.js",
+  "scripts": {
+    "run": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Emilio Cobos Álvarez <ecoal95@gmail.com>",
+  "license": "GPL-2.0"
+}
