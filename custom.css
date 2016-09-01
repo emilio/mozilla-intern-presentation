@@ -17,6 +17,10 @@ html, body {
   font-size: 1.5em;
 }
 
+.reveal strong {
+  font-weight: bold;
+}
+
 .reveal .subtitle {
   font-size: 1em;
   color: #555;
